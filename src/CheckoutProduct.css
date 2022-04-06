@@ -12,7 +12,7 @@
 .checkoutProduct_image{
     object-fit: contain;
     width: 180px;
-    height: 180px;
+    height: 200px;
 }
 .checkoutProduct_title{
     font-size: 17px;
