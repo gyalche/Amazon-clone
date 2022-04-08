@@ -9,6 +9,7 @@ import Header from './Header';
 import { useEffect } from 'react';
 import {auth} from './Firebase.js';
 import { useStateValue } from './StateProvider';
+import Payment from './Payment';
 function Body() {
 const [{}, dispatch] =useStateValue();
   useEffect(() => {
@@ -41,8 +42,7 @@ const [{}, dispatch] =useStateValue();
           
         </Route>
       <Route path="/login" element={<Login />} />
-
-        
+      <Route path='/payment' element={<Payment />} />   
     </Routes>
    
    
