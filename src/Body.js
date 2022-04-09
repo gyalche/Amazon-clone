@@ -10,6 +10,13 @@ import { useEffect } from 'react';
 import {auth} from './Firebase.js';
 import { useStateValue } from './StateProvider';
 import Payment from './Payment';
+import {loadStripe} from '@stripe/stripe-js';
+import {Elements} from '@stripe/react-stripe-js';
+
+const promise=loadStripe(
+    "pk_test_51KmM5mSI1wL8D1I0lBTaIl86uJrp3MsqRShjQqOsgupaqTg7i4bUwGHAgD53yu9AoFyxO2SjlK9ldiI8SGPT2Ar400Ha2bwm9g"
+
+    );
 function Body() {
 const [{}, dispatch] =useStateValue();
   useEffect(() => {
@@ -17,7 +24,7 @@ const [{}, dispatch] =useStateValue();
       //only run once when the app component is loaded
       auth
           .onAuthStateChanged(authUser =>{
-            console.log("the use is", authUser);
+            console.log("the user is", authUser);
           })
 
           if(authUser){
@@ -33,7 +40,7 @@ const [{}, dispatch] =useStateValue();
             dispatch({ type:'SET_USER', user:null })
           }
     };
-  }, [input])
+  }, [])
   return (
       <div className="main_body">
     <Routes>
@@ -42,7 +49,8 @@ const [{}, dispatch] =useStateValue();
           
         </Route>
       <Route path="/login" element={<Login />} />
-      <Route path='/payment' element={<Payment />} />   
+      <Route path='/payment' element={<Payment />} Elements stripe={promise} /> 
+        
     </Routes>
    
    

@@ -1,8 +1,6 @@
-
-
 export const initialState={
     basket:[],
-    use:null
+    user:null
 };
 
 
