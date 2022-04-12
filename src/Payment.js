@@ -49,10 +49,10 @@ function Payment() {
                 card: elements.getElement(CardElement)
             }
         }).then(({paymentIntent})=>{
+            
             //paymentIntent = paymentConformation
-
             db.collection('users')
-            .doc(user?.id)
+            .doc(user?.uid)
             .collection('orders')
             .doc(paymentIntent.id)
             .set({
