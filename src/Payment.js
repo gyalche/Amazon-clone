@@ -7,6 +7,7 @@ import {CardElement, useStripe, useElements} from '@stripe/react-stripe-js';
 import CurrencyFormat from 'react-currency-format';
 import {getBasketTotal} from './reducer';
 import axios from './axios';
+import {db} from './firebase.js';
 // import {loadStripe} from '@stripe/stripe-js';
 // import {Elements} from '@stripe/react-stripe-js';
 
@@ -31,7 +32,7 @@ function Payment() {
         const getClientSecret = async ()=>{
             const response=await axios({
                 method:'post',
-                //stripe expects the total in a currencies submit
+                //stripe expects the total in a currencies sub-unit
                 url:`payments/create?total=${getBasketTotal(basket) * 100}`
             });
             setClientSecret(response.data.clientSecret)
@@ -42,16 +43,30 @@ function Payment() {
         //do all the fancy stripe here
         e.preventDefault();
         setProcessing(true);
-
+        
         const payload=await stripe.confirmCardPayment(clientSecret,{
             payment_method:{
                 card: elements.getElement(CardElement)
             }
         }).then(({paymentIntent})=>{
             //paymentIntent = paymentConformation
+
+            db.collection('users')
+            .doc(user?.id)
+            .collection('orders')
+            .doc(paymentIntent.id)
+            .set({
+                basket:basket,
+                amount:paymentIntent.amount,
+                created:paymentIntent.created
+            })
             setSucceeded(true);
             setError(null);
             setProcessing(false);
+
+            dispatch({
+                type: 'EMPTY_BASKET'
+            })
 
             history.replace('/orders')
         })
@@ -63,7 +78,6 @@ function Payment() {
         e.preventDefault();
         //listen for changes in the CardElemnts
         //and display any errors as the customer types their card details
-
         setDiabled(e.empty);
         setError(e.error? e.error.message: "");
     }
