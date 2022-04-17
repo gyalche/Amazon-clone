@@ -51,15 +51,16 @@ function Payment() {
         }).then(({paymentIntent})=>{
             
             //paymentIntent = paymentConformation
-            db.collection('users')
-            .doc(user?.uid)
-            .collection('orders')
-            .doc(paymentIntent.id)
-            .set({
-                basket:basket,
-                amount:paymentIntent.amount,
-                created:paymentIntent.created
-            })
+            db
+                .collection('users')
+                .doc(user?.uid)
+                .collection('orders')
+                .doc(paymentIntent.id)
+                .set({
+                    basket:basket,
+                    amount:paymentIntent.amount,
+                    created:paymentIntent.created
+                })
             setSucceeded(true);
             setError(null);
             setProcessing(false);
@@ -128,7 +129,7 @@ function Payment() {
                         
                         <form onSubmit={handleSubmit}>
                             <CardElement onChange={handleChange} />
-
+                        
                             <div className='payment_priceContainer'>
                                 <CurrencyFormat
                                     renderText={(value)=>(
